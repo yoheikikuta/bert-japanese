@@ -5,3 +5,6 @@ data/wiki/*
 !data/wiki/.gitkeep
 model/*
 !model/.gitkeep
+notebook/*
+!notebook/.gitkeep
+__pycache__
