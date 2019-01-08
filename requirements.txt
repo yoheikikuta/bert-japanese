@@ -1,3 +1,4 @@
 sentencepiece
 jupyter
 tensorflow
+pandas
