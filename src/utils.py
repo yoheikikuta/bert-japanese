@@ -1,6 +1,3 @@
-# coding=utf-8
-
-
 def str_to_value(input_str):
     """
     Convert data type of value of dict to appropriate one.

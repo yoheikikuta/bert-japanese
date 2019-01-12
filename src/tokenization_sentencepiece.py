@@ -169,7 +169,7 @@ class FullTokenizer(object):
 class SentencePieceTokenizer(object):
     """Runs SentencePiece tokenization (from raw text to tokens list)"""
 
-    def __init__(self, model_file = None, do_lower_case=True):
+    def __init__(self, model_file=None, do_lower_case=True):
         """Constructs a SentencePieceTokenizer."""
         self.tokenizer = sp.SentencePieceProcessor()
         if self.tokenizer.Load(model_file):

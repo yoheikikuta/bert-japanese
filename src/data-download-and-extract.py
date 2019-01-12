@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#-*- coding:utf-8 -*-
 
 import configparser
 import os
@@ -27,19 +26,22 @@ def reporthook(blocknum, blocksize, totalsize):
         s = "\r%5.1f%% %*d / %d" % (
             percent, len(str(totalsize)), readsofar, totalsize)
         sys.stderr.write(s)
-        if readsofar >= totalsize: # near the end
+        if readsofar >= totalsize:  # near the end
             sys.stderr.write("\n")
-    else: # total size is unknown
+    else:  # total size is unknown
         sys.stderr.write("read %d\n" % (readsofar,))
+
 
 def download():
     urlretrieve(FILEURL, FILEPATH, reporthook)
 
+
 def extract():
     subprocess.call(['python3', 
                     os.path.join(CURDIR, os.pardir, os.pardir, 
-                                'wikiextractor', 'WikiExtractor.py'), 
+                                 'wikiextractor', 'WikiExtractor.py'), 
                     FILEPATH, "-o={}".format(EXTRACTDIR)])
+
 
 def main():
     download()
