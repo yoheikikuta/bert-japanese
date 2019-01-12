@@ -13,36 +13,26 @@ import os
 import sys
 import tempfile
 import tensorflow as tf
-
-def str_to_value(input_str):
-    """
-    Convert data type of value of dict to appropriate one.
-    Assume there are only three types: str, int, float.
-    """
-    if input_str.isalpha():
-        return input_str
-    elif input_str.isdigit():
-        return int(input_str)
-    else:
-        return float(input_str)
+import utils
 
 CURDIR = os.path.dirname(os.path.abspath(__file__))
 CONFIGPATH = os.path.join(CURDIR, os.pardir, 'config.ini')
 config = configparser.ConfigParser()
 config.read(CONFIGPATH)
 bert_config_file = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8', suffix='.json')
-bert_config_file.write(json.dumps({k:str_to_value(v) for k,v in config['BERT-CONFIG'].items()}))
+bert_config_file.write(json.dumps({k:utils.str_to_value(v) for k,v in config['BERT-CONFIG'].items()}))
 bert_config_file.seek(0)
 
-sys.path.append( os.path.join(CURDIR, os.pardir, 'bert') )
+sys.path.append(os.path.join(CURDIR, os.pardir, 'bert'))
 import modeling
 import optimization
+
 
 flags = tf.flags
 
 FLAGS = flags.FLAGS
 
-## Required parameters
+# Required parameters
 flags.DEFINE_string(
     "bert_config_file", None,
     "The config json file corresponding to the pre-trained BERT model. "
@@ -56,7 +46,7 @@ flags.DEFINE_string(
     "output_dir", None,
     "The output directory where the model checkpoints will be written.")
 
-## Other parameters
+# Other parameters
 flags.DEFINE_string(
     "init_checkpoint", None,
     "Initial checkpoint (usually from a pre-trained BERT model).")
@@ -168,7 +158,7 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
     scaffold_fn = None
     if init_checkpoint:
       (assignment_map, initialized_variable_names
-      ) = modeling.get_assignment_map_from_checkpoint(tvars, init_checkpoint)
+       ) = modeling.get_assignment_map_from_checkpoint(tvars, init_checkpoint)
       if use_tpu:
 
         def tpu_scaffold():

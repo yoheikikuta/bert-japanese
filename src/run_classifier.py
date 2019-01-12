@@ -16,28 +16,17 @@ import sys
 import tempfile
 import tokenization_sentencepiece as tokenization
 import tensorflow as tf
-
-def str_to_value(input_str):
-    """
-    Convert data type of value of dict to appropriate one.
-    Assume there are only three types: str, int, float.
-    """
-    if input_str.isalpha():
-        return input_str
-    elif input_str.isdigit():
-        return int(input_str)
-    else:
-        return float(input_str)
+import utils
 
 CURDIR = os.path.dirname(os.path.abspath(__file__))
 CONFIGPATH = os.path.join(CURDIR, os.pardir, 'config.ini')
 config = configparser.ConfigParser()
 config.read(CONFIGPATH)
 bert_config_file = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8', suffix='.json')
-bert_config_file.write(json.dumps({k:str_to_value(v) for k,v in config['BERT-CONFIG'].items()}))
+bert_config_file.write(json.dumps({k:utils.str_to_value(v) for k,v in config['BERT-CONFIG'].items()}))
 bert_config_file.seek(0)
 
-sys.path.append( os.path.join(CURDIR, os.pardir, 'bert') )
+sys.path.append(os.path.join(CURDIR, os.pardir, 'bert'))
 import modeling
 import optimization
 
@@ -45,7 +34,7 @@ flags = tf.flags
 
 FLAGS = flags.FLAGS
 
-## Required parameters
+# Required parameters
 flags.DEFINE_string(
     "data_dir", None,
     "The input data dir. Should contain the .tsv files (or other data files) "
@@ -68,7 +57,7 @@ flags.DEFINE_string(
     "output_dir", None,
     "The output directory where the model checkpoints will be written.")
 
-## Other parameters
+# Other parameters
 
 flags.DEFINE_string(
     "init_checkpoint", None,
@@ -534,7 +523,7 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
     scaffold_fn = None
     if init_checkpoint:
       (assignment_map, initialized_variable_names
-      ) = modeling.get_assignment_map_from_checkpoint(tvars, init_checkpoint)
+       ) = modeling.get_assignment_map_from_checkpoint(tvars, init_checkpoint)
       if use_tpu:
 
         def tpu_scaffold():
