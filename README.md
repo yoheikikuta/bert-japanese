@@ -115,4 +115,4 @@ done
 You need GPU/TPU environment to pretrain a BERT model.  
 The following notebook provides the link to Colab notebook where you can run the scripts with TPUs.
 
-- **[pretraining_ipnyb.ipynb](https://github.com/yoheikikuta/bert-japanese/blob/master/notebook/pretraining_ipnyb.ipynb)**
+- **[pretraining.ipynb](https://github.com/yoheikikuta/bert-japanese/blob/master/notebook/pretraining.ipynb)**
