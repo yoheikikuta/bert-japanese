@@ -6,7 +6,7 @@ This is a repository of Japanese BERT model with SentencePiece tokenizer.
 We provide pretrained BERT model and trained SentencePiece model for Japanese text.
 Training data is the Japanese wikipedia corpus from [`Wikimedia Downloads`](https://dumps.wikimedia.org/).  
 Please download all objects in the following google drive to `model/` directory.
-- **[`Pretrained BERT model and trained SentencePiece model`](https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O?ogsrc=32)** 
+- **[`Pretrained BERT model and trained SentencePiece model`](https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O?usp=sharing)** 
 
 Loss function during training is as below (after 1M steps the loss function massively changes because `max_seq_length` is changed from `128` to `512`.):
 ![pretraining-loss](pretraining-loss.png)
