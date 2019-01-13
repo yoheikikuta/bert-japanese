@@ -3,8 +3,8 @@ This is a repository of Japanese BERT model with SentencePiece tokenizer.
 
 
 ## Pretrained models
-We provide the pretrained BERT model and trained SentencePiece model for Japanese text.
-Training data is Japanese wikipedia corpus from [Wikimedia Downloads](https://dumps.wikimedia.org/).  
+We provide pretrained BERT model and trained SentencePiece model for Japanese text.
+Training data is the Japanese wikipedia corpus from [`Wikimedia Downloads`](https://dumps.wikimedia.org/).  
 Please download all objects in the following google drive to `model/` directory.
 - **[`Pretrained BERT model and trained SentencePiece model`](https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O?ogsrc=32)** 
 
