@@ -2,7 +2,7 @@
 
 # Read data_text_dir path from a config file.
 CURDIR=$(cd $(dirname $0); pwd)
-source <(grep TEXTDIR ${CURDIR}/../config.ini | sed 's/ *= */=/g')
+source <(sed -n '/^\[DATA\]/,/^\[/p' ${CURDIR}/../config.ini | grep TEXTDIR | sed 's/ *= */=/g')
 
 # Text preprocessing.
 # 1-1. Remove blank lines.
