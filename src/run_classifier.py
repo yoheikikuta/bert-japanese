@@ -236,13 +236,15 @@ class LivedoorProcessor(DataProcessor):
   def _create_examples(self, lines, set_type):
     """Creates examples for the training and dev sets."""
     examples = []
+    if len(lines) > 0:
+      idx_text = lines[0].index('text')
+      idx_label = lines[0].index('label')
     for (i, line) in enumerate(lines):
-      # Only the test set has a header
       if i == 0:
         continue
       guid = "%s-%s" % (set_type, i)
-      text_a = tokenization.convert_to_unicode(line[0])
-      label = tokenization.convert_to_unicode(line[1])
+      text_a = tokenization.convert_to_unicode(line[idx_text])
+      label = tokenization.convert_to_unicode(line[idx_label])
       examples.append(
           InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
     return examples
