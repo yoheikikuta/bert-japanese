@@ -240,12 +240,12 @@ class LivedoorProcessor(DataProcessor):
       if i == 0:
         idx_text = line.index('text')
         idx_label = line.index('label')
-        continue
-      guid = "%s-%s" % (set_type, i)
-      text_a = tokenization.convert_to_unicode(line[idx_text])
-      label = tokenization.convert_to_unicode(line[idx_label])
-      examples.append(
-          InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+      else:
+        guid = "%s-%s" % (set_type, i)
+        text_a = tokenization.convert_to_unicode(line[idx_text])
+        label = tokenization.convert_to_unicode(line[idx_label])
+        examples.append(
+            InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
     return examples
 
 
