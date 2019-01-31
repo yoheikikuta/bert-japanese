@@ -116,3 +116,19 @@ You need GPU/TPU environment to pretrain a BERT model.
 The following notebook provides the link to Colab notebook where you can run the scripts with TPUs.
 
 - **[pretraining.ipynb](https://github.com/yoheikikuta/bert-japanese/blob/master/notebook/pretraining.ipynb)**
+
+
+## How to cite this work in papers
+We didn't publish any paper about this work.  
+Please cite this repository in publications as the following:
+
+```
+@misc{bertjapanese,
+  author = {Yohei Kikuta},
+  title = {BERT Pretrained model Trained On Japanese Wikipedia Articles},
+  year = {2019},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/yoheikikuta/bert-japanese}},
+}
+```
