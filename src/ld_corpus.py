@@ -33,8 +33,9 @@ from run_classifier import model_fn_builder
 from run_classifier import file_based_input_fn_builder
 from run_classifier import file_based_convert_examples_to_features
 from run_classifier import LivedoorProcessor
-# import tokenization_sp_mod as tokenization
+
 import tokenization_sentencepiece as tokenization
+# import tokenization_sp_mod as tokenization
 
 # evaluation utilities
 from sklearn.metrics import classification_report
