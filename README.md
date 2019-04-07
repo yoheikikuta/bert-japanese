@@ -1,6 +1,62 @@
 # BERT with SentencePiece for Japanese text.
-This is a repository of Japanese BERT model with SentencePiece tokenizer.  
+This is a repository of Japanese BERT model with SentencePiece tokenizer  
+forked from https://github.com/yoheikikuta/bert-japanese .
 
+## Current changes
+- appended optimization.py and modeling.py from original bert repo.
+- ld_corpus.py: a script to download data and to test finetuned model.
+
+## Usage ld_corpus.py
+Suppose that current directory is repository root.
+
+```:bash
+#
+# Download
+python src/ld_corpus.py -m fetch
+# According to TRAIN_PROPS in config.ini in this version
+# train data with proportion 0.05, 0.10, 0.20, 0.50, 1.00 
+# (to the rest samples of vaild and train) will be created in data/livedoor
+ls data/livedoor/
+# prop_0p05  prop_0p10  prop_0p20  prop_0p50  prop_1p00  text
+# Note: test.tsv, dev.tsv in prop_x are the same each other
+#
+# Train
+python src/run_classifier.py \
+  --task_name=livedoor \
+  --do_train=true \
+  --do_eval=true \
+  --data_dir=data/livedoor/prop_1p00 \
+  --model_file=model/wiki-ja.model \
+  --vocab_file=model/wiki-ja.vocab \
+  --init_checkpoint=model/model.ckpt-1400000 \
+  --max_seq_length=512 \
+  --train_batch_size=4 \
+  --learning_rate=2e-5 \
+  --num_train_epochs=10 \
+  --output_dir=model/livedoor_model_normal_1p00_1
+#
+# Test
+python src/ld_corpus.py -m test \
+  -p model/livedoor_model_normal_1p00_1 \ 
+  -d data/livedoor/prop_1p00
+# (output example)
+# ***** RESULT *****
+# Test dataset:
+# data/livedoor/prop_1p00/test.tsv
+# Tested model:
+# model/livedoor_model_normal_1p00_1/model.ckpt-11052
+# Accuracy:
+# 0.9572301425661914
+# Detailed report:
+#                 precision    recall  f1-score   support
+# 
+# dokujo-tsushin       0.96      0.91      0.93       178
+# ...
+# 
+# Confusion matrix:
+# [[162   1   0   5   1   9   0   0   0]
+# ...
+```
 
 ## Pretrained models
 We provide pretrained BERT model and trained SentencePiece model for Japanese text.
