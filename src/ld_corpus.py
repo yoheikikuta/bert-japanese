@@ -34,8 +34,8 @@ from run_classifier import file_based_input_fn_builder
 from run_classifier import file_based_convert_examples_to_features
 from run_classifier import LivedoorProcessor
 
-import tokenization_sentencepiece as tokenization
-# import tokenization_sp_mod as tokenization
+import tokenization_sentencepiece
+import tokenization_sp_mod
 
 # evaluation utilities
 from sklearn.metrics import classification_report
@@ -306,6 +306,7 @@ def cmd_test(args):
     
     # Model
     estimator = load_estimator(config, FLAGS)
+    tokenization = getattr(sys.modules[__name__], config['TOKENIZER']['PACKAGE'])
     tokenizer = tokenization.FullTokenizer(
             model_file=FLAGS.model_file,
             vocab_file=FLAGS.vocab_file,

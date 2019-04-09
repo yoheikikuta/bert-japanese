@@ -17,10 +17,6 @@ import tempfile
 import tensorflow as tf
 import utils
 
-import tokenization_sentencepiece as tokenization
-# import tokenization_sp_mod as tokenization
-
-
 CURDIR = os.path.dirname(os.path.abspath(__file__))
 CONFIGPATH = os.path.join(CURDIR, os.pardir, 'config.ini')
 config = configparser.ConfigParser()
@@ -28,6 +24,10 @@ config.read(CONFIGPATH)
 bert_config_file = tempfile.NamedTemporaryFile(mode='w+t', encoding='utf-8', suffix='.json')
 bert_config_file.write(json.dumps({k:utils.str_to_value(v) for k,v in config['BERT-CONFIG'].items()}))
 bert_config_file.seek(0)
+
+import tokenization_sentencepiece
+import tokenization_sp_mod
+tokenization = getattr(sys.modules[__name__], config['TOKENIZER']['PACKAGE'])
 
 sys.path.append(os.path.join(CURDIR, os.pardir, 'bert'))
 import modeling
