@@ -169,10 +169,99 @@ class FullTokenizer(object):
 
 class SentencePieceTokenizer(object):
     
+    nmt_norm_map = str.maketrans({
+            # SPACES
+            '\u0009':'\u0020',  # TAB
+            '\u000A':'\u0020',  # LINE FEED
+            '\u000C':'\u0020',  # FORM FEED
+            '\u000D':'\u0020',  # CARRIAGE RETURN
+            '\u1680':'\u0020',  # OGHAM SPACE MARK
+            '\u200B':'\u0020',  # ZERO WIDTH SPACE
+            '\u200E':'\u0020',  # LEFT-TO-RIGHT MARK
+            '\u200F':'\u0020',  # RIGHT-TO-LEFT MARK
+            '\u2028':'\u0020',  # LINE SEPARATOR
+            '\u2029':'\u0020',  # PARAGRAPH SEPARATOR
+            '\u2581':'\u0020',  # LOWER ONE EIGHT BLOCK
+            '\uFEFF':'\u0020',  # ZERO WIDTH NO-BREAK
+            '\uFFFD':'\u0020',  # REPLACEMENT CHARACTER
+            '\u200C':'\u0020',  # ZERO WIDTH NON-JOINER
+            '\u200D':'\u0020',  # ZERO WIDTH JOINER
+            
+            # Ascii Control characters
+            '\u0001':'',
+            '\u0002':'',
+            '\u0003':'',
+            '\u0004':'',
+            '\u0005':'',
+            '\u0006':'',
+            '\u0007':'',
+            '\u0008':'',
+            '\u000B':'',
+            '\u000E':'',
+            '\u000F':'',
+            '\u0010':'',
+            '\u0011':'',
+            '\u0012':'',
+            '\u0013':'',
+            '\u0014':'',
+            '\u0015':'',
+            '\u0016':'',
+            '\u0017':'',
+            '\u0018':'',
+            '\u0019':'',
+            '\u001A':'',
+            '\u001B':'',
+            '\u001C':'',
+            '\u001D':'',
+            '\u001E':'',
+            '\u001F':'',
+            
+            #  <control-007F>..<control-009F>
+            '\u007F':'',
+            '\u008F':'',
+            '\u009F':'',    
+        })
+    
     @staticmethod
-    def normalize(text):
-        """Default normalizer. Use before tokenizing"""
-        return unicodedata.normalize('NFKC', re.sub('\s+', ' ',text.strip()))
+    def normalize_with_nmt_NFKC(
+            text, 
+            treat_whitespace_as_suffix_=False, 
+            add_dummy_prefix=True, 
+            remove_extra_whitespaces=True, 
+            escape_whitespaces=True,
+            do_lower_case=True,
+        ):
+        """
+        An emulation of sp normalizer with nmt NFKC
+        This method is not required before inputing tokens into the sp tokenizer because it normalize them by itself
+        You can know in advance what the whole string of the tokenized text will be
+        """
+        # custom mapping for nmt
+        text = text.translate(SentencePieceTokenizer.nmt_norm_map)
+        # tilde protection (storing)
+        tildes = filter(lambda c: c == '\uFF5E' or c == '\u007E', text)
+        # nfkc normalization
+        text = unicodedata.normalize('NFKC', text)
+        # tilde protection (restoring)
+        text = ''.join([c if c != '\u007E' else next(tildes) for c in text])
+        
+        # triming extra spaces
+        if remove_extra_whitespaces:
+            text = re.sub('\u0020+', '\u0020', text.strip())
+        # dummy space
+        if add_dummy_prefix:
+            if treat_whitespace_as_suffix_:
+                text = text + '\u0020'
+            else:
+                text = '\u0020' + text
+        # escaping spaces
+        if escape_whitespaces:
+            text = text.replace('\u0020', '\u2581')
+        
+        # do_lower_case which is a part of BERT script
+        if do_lower_case:
+            text = text.lower()
+        return text
     
     def __init__(self, model_file=None, independent_tokens=None, do_lower_case=True):
         """Constructs a SentencePieceTokenizer."""
@@ -189,11 +278,11 @@ class SentencePieceTokenizer(object):
         if self.independent_tokens is None:
             self.independent_tokens = ['、', '\u2581']
     
-    def tokenize(self, text, normalize=True):
+    def tokenize(self, text, normalize=False):
         """Tokenizes a piece of text."""
         text = convert_to_unicode(text)
         if normalize:
-            text = SentencePieceTokenizer.normalize(text)
+            text = SentencePieceTokenizer.normalize_with_nmt_NFKC(text)
         if self.do_lower_case:
             text = text.lower()
         
@@ -203,30 +292,46 @@ class SentencePieceTokenizer(object):
 
     def output_hook(self, tokens):
         """
-        1. remove "\u2581" at the first position for character position consistancy
-           for such tasks as squad.
-        2. find tokens that contain "\u2581" and divide them.
+        1. separete some prefix (specified in self.independent_tokens) in tokens
+        2. remove "\u2581" at the first position inserted due to the add_dummy_prefix flag.
         """
         
+        #affected = []
+        #def _write():
+        #    with open('affected_tokens.txt', 'a') as f:
+        #        f.write(str(affected))
+        #        f.write('\n')
+        
         if len(tokens) == 0:
+            #_write()
             return []
             
         if tokens[0].startswith('\u2581'):
+            #if len(tokens[0]) > 1:
+            #    affected.append(tokens[0])
             tokens[0] = tokens[0][1:]
             if len(tokens[0]) == 0:
                 del tokens[0]
                 if len(tokens) == 0:
+                    #_write()
                     return []
         
-        for it in self.independent_tokens:
-            tmp_tokens = []
-            for token in tokens:
-                for t in token.split(it):
-                    if len(t) > 0:
-                        tmp_tokens.append(t)
-                    tmp_tokens.append(it)
-                del tmp_tokens[-1]
-            tokens = tmp_tokens
+        def is_separatable_prefix(t):
+            if len(t) > 1 and t[0] in self.independent_tokens:
+                return True
+            return False
         
-        return tokens
+        new_tokens = []
+        
+        for i in range(len(tokens)):
+            token = tokens[i]
+            while is_separatable_prefix(token):    
+                new_tokens.append(token[0])
+                token = token[1:]
+            new_tokens.append(token)
+            #if token != tokens[i]:
+            #    affected.append(tokens[i])
+        
+        #_write()
+        return new_tokens
     
