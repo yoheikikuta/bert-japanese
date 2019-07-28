@@ -76,12 +76,19 @@ Build a docker image with Dockerfile and create a docker container.
 
 ### Data preparation
 Data downloading and preprocessing.
-It takes about one hour on GCP n1-standard-8 (8CPUs, 30GB memories) instance.
+It takes about a few hours on GCP n1-standard-16 (16CPUs, 60GB memories) instance.
 
 ```
 python3 src/data-download-and-extract.py
 bash src/file-preprocessing.sh
 ```
+
+The above scripts use the latest jawiki data and wikiextractor module, which are different from those used for the pretrained model.
+If you wanna prepare the same situation, use the following information:
+
+- bert-japanese: commit `074fe20f33a020769091e1e5552b33867ccbd750`
+- dataset: `jawiki-20181220-pages-articles-multistream.xml.bz2` in the [Google Drive](https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O?usp=sharing)
+- wikiextractor: commit `1e4236de4237d0a89d0ad7241505d73ee7e23517`
 
 ### Training SentencePiece model
 Train a SentencePiece model using the preprocessed data.
