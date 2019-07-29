@@ -114,7 +114,8 @@ for DIR in $( find /work/data/wiki/ -mindepth 1 -type d ); do
     --max_predictions_per_seq=20 \
     --masked_lm_prob=0.15 \
     --random_seed=12345 \
-    --dupe_factor=5
+    --dupe_factor=5 \
+    --do_whole_word_mask=False
 done
 ```
 
