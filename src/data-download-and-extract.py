@@ -38,7 +38,7 @@ def download():
 
 def extract():
     subprocess.call(['python3', 
-                    os.path.join(CURDIR, os.pardir, os.pardir, 
+                    os.path.join(CURDIR, os.pardir,
                                  'wikiextractor', 'WikiExtractor.py'), 
                     FILEPATH, "-o={}".format(EXTRACTDIR)])
 
