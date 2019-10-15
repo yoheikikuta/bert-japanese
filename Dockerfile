@@ -14,9 +14,6 @@ RUN pip3 install --upgrade pip
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
-# Install WikiExtractor
-RUN git clone https://github.com/attardi/wikiextractor.git
-
 # Set Japanese environment
 RUN apt-get update && \
     apt-get install -y locales && \

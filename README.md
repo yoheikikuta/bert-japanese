@@ -1,6 +1,11 @@
 # BERT with SentencePiece for Japanese text.
 This is a repository of Japanese BERT model with SentencePiece tokenizer.  
 
+To clone this repository together with the required
+[BERT](https://github.com/google-research/bert) and 
+[WikiExtractor](https://github.com/attardi/wikiextractor):
+
+    git clone --recurse-submodules https://github.com/yoheikikuta/bert-japanese
 
 ## Pretrained models
 We provide pretrained BERT model and trained SentencePiece model for Japanese text.
@@ -73,6 +78,11 @@ Follow the instructions below.
 
 ### Environment set up
 Build a docker image with Dockerfile and create a docker container.
+
+```
+docker build -t bert-ja .
+docker run -v `pwd`:/work --rm  -it bert-ja bash
+```
 
 ### Data preparation
 Data downloading and preprocessing.
