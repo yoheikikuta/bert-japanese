@@ -79,6 +79,11 @@ Follow the instructions below.
 ### Environment set up
 Build a docker image with Dockerfile and create a docker container.
 
+```
+docker build -t bert-ja .
+docker run -v `pwd`:/work --rm  -it bert-ja bash
+```
+
 ### Data preparation
 Data downloading and preprocessing.
 It takes about a few hours on GCP n1-standard-16 (16CPUs, 60GB memories) instance.
