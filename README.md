@@ -81,7 +81,7 @@ Build a docker image with Dockerfile and create a docker container.
 
 ```
 docker build -t bert-ja .
-docker run -v `pwd`:/work --rm  -it bert-ja bash
+docker run -it --rm -v $PWD:/work -p 8888:8888 bert-ja
 ```
 
 ### Data preparation
