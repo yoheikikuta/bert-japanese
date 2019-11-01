@@ -1,4 +1,4 @@
 sentencepiece
 jupyter
-tensorflow
+tensorflow<2.0.0
 pandas
