@@ -70,7 +70,14 @@ The results are the following:
     weighted avg       0.92      0.92      0.91      1473
   ```
 
-
+## Cautions when using the model as a sentence generation model
+The model expects lowercase input and the tokenizer is assumed to be used with `do_lower_case=True` option, but the special tokens such as `[CLS]` are registered in uppercase characters.  
+Therefore, when we put `"[CLS] I am ..."` it into the tokenizer as a raw string, the tokenizer first makes it lowercase (`"[cls] i am ..."`) and then cannot interpret `"[cls]"` as the special token, which causes problems.  
+If you wanna use the model as a sentence generation model, follow from these steps (sorry, it's a little bit confusing):
+- keep special tokens (such as `[CLS]` or `[SEP]`) uppercase
+- make original input sentences lowercase manually (e.g., `"i am ..."`)
+- join them together (e.g., `"[CLS] i am ..."`) and put it into the tokenizer with `do_lower_case=False` option
+- put the obtained tokens into the model
 
 ## Pretraining from scratch
 All scripts for pretraining from scratch are provided.
