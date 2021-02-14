@@ -5,7 +5,9 @@ To clone this repository together with the required
 [BERT](https://github.com/google-research/bert) and 
 [WikiExtractor](https://github.com/attardi/wikiextractor):
 
-    git clone --recurse-submodules https://github.com/yoheikikuta/bert-japanese
+```sh
+git clone --recurse-submodules https://github.com/yoheikikuta/bert-japanese
+```
 
 ## Pretrained models
 We provide pretrained BERT model and trained SentencePiece model for Japanese text.
@@ -16,7 +18,7 @@ Please download all objects in the following google drive to `model/` directory.
 Loss function during training is as below (after 1M steps the loss function massively changes because `max_seq_length` is changed from `128` to `512`.):
 ![pretraining-loss](pretraining-loss.png)
 
-```
+```sh
 ***** Eval results *****
   global_step = 1400000
   loss = 1.3773012
@@ -34,7 +36,8 @@ You can run the notebook on CPU (too slow) or GPU/TPU environments.
 
 The results are the following:
 - BERT with SentencePiece
-  ```
+
+```sh
                   precision    recall  f1-score   support
 
   dokujo-tsushin       0.98      0.94      0.96       178
@@ -50,9 +53,11 @@ The results are the following:
        micro avg       0.97      0.97      0.97      1473
        macro avg       0.97      0.97      0.97      1473
     weighted avg       0.97      0.97      0.97      1473
-  ```
+```
+
 - sklearn GradientBoostingClassifier with MeCab
-  ```
+
+```sh
                     precision    recall  f1-score   support
 
   dokujo-tsushin       0.89      0.86      0.88       178
@@ -68,7 +73,7 @@ The results are the following:
        micro avg       0.92      0.92      0.92      1473
        macro avg       0.91      0.91      0.91      1473
     weighted avg       0.92      0.92      0.91      1473
-  ```
+```
 
 ## Cautions when using the model as a sentence generation model
 The model expects lowercase input and the tokenizer is assumed to be used with `do_lower_case=True` option, but the special tokens such as `[CLS]` are registered in uppercase characters.  
@@ -86,7 +91,7 @@ Follow the instructions below.
 ### Environment set up
 Build a docker image with Dockerfile and create a docker container.
 
-```
+```sh
 docker build -t bert-ja .
 docker run -it --rm -v $PWD:/work -p 8888:8888 bert-ja
 ```
@@ -95,7 +100,7 @@ docker run -it --rm -v $PWD:/work -p 8888:8888 bert-ja
 Data downloading and preprocessing.
 It takes about a few hours on GCP n1-standard-16 (16CPUs, 60GB memories) instance.
 
-```
+```sh
 python3 src/data-download-and-extract.py
 bash src/file-preprocessing.sh
 ```
@@ -111,7 +116,7 @@ If you wanna prepare the same situation, use the following information:
 Train a SentencePiece model using the preprocessed data.
 It takes about two hours on the instance.
 
-```
+```sh
 python3 src/train-sentencepiece.py
 ```
 
@@ -119,7 +124,7 @@ python3 src/train-sentencepiece.py
 Create .tfrecord files for pretraining.
 For longer sentence data, replace the value of `max_seq_length` with `512`.
 
-```
+```sh
 for DIR in $( find /work/data/wiki/ -mindepth 1 -type d ); do 
   python3 src/create_pretraining_data.py \
     --input_file=${DIR}/all.txt \
@@ -147,7 +152,7 @@ The following notebook provides the link to Colab notebook where you can run the
 We didn't publish any paper about this work.  
 Please cite this repository in publications as the following:
 
-```
+```bibtex
 @misc{bertjapanese,
   author = {Yohei Kikuta},
   title = {BERT Pretrained model Trained On Japanese Wikipedia Articles},
